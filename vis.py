@@ -1,6 +1,10 @@
 import streamlit as st
 from vis import main_page, vis
 
+st.set_page_config(
+    layout="wide",
+    initial_sidebar_state="auto"
+)
 
 def main():
     """

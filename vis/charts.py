@@ -17,19 +17,19 @@ def show_charts(figs, plots_color, chart_titles, template):
         template: plotly template
 
     """
+    st.write(template)
     for fig in figs:
         if isinstance(fig, (list, tuple)):
             f = fig[0]
             draw.fig_layout(template, f, chart_titles=chart_titles, plots_colorscale=plots_color)
-            f.update_traces(line=dict(width=2.5))
-            st.plotly_chart(f, use_container_width=True)
+            # f.update_traces(line=dict(width=2.5))
+            st.plotly_chart(f, use_container_width=True, theme=None)
 
             with st.expander('Detailed view'):
                 for f in fig[1:]:
                     draw.fig_layout(template, f, chart_titles=chart_titles, plots_colorscale=plots_color)
-                    f.update_traces(line=dict(width=2.5))
-                    st.plotly_chart(f, use_container_width=True)
+                    # f.update_traces(line=dict(width=2.5))
+                    st.plotly_chart(f, use_container_width=True, theme=None)
         else:
             draw.fig_layout(template, fig, chart_titles=chart_titles, plots_colorscale=plots_color)
-            fig.update_traces(line=dict(width=3.5))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, theme=None)

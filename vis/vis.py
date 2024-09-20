@@ -122,7 +122,12 @@ def visualisation():
                 shifters = [(i + 1) * shift for i in range(len(df.columns))]
                 plot_df = df if spectra_conversion_type == 'RAW' else flattened
                 plot_df = plot_df + shifters
-                figs = [px.line(plot_df, x=plot_df.index, y=plot_df.columns, color_discrete_sequence=plots_color)]
+                figs = [px.line(plot_df,
+                                x=plot_df.index,
+                                y=plot_df.columns,
+                                color_discrete_sequence=plots_color,
+                                template=template
+                                )]
 
         # Mean spectra
         elif chart_type == 'MS':

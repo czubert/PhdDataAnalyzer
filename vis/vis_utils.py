@@ -24,8 +24,7 @@ def choose_template():
     """
     template = st.selectbox(
         "Chart template",
-        list(pio.templates), index=6, key='new')
-
+        list(pio.templates), index=4, key='new')
     return template
 
 
@@ -47,8 +46,11 @@ def get_chart_vis_properties_vis():
                        'matter', 'solar', 'speed', 'tempo', 'thermal', 'turbid',
                        ]
     }
+
+    # Choosing colors
     print_widget_labels('Colors')
     palette_type = st.selectbox("Type of color palette", list(palettes.keys()) + ['custom'], 0)
+
     if palette_type == 'custom':
         palette = st.text_area('Hexadecimal colors', '#DB0457 #520185 #780A34 #49BD02 #B25AE8',
                                help='Type space separated hexadecimal codes')
@@ -62,8 +64,12 @@ def get_chart_vis_properties_vis():
         palette = palette[::-1]
 
     print_widgets_separator(2)
+
+    # Choosing Template
     print_widget_labels('Template')
-    template = choose_template()
+    template = st.selectbox(
+        "Chart template",
+        list(pio.templates), index=4, key='new')
     print_widgets_separator(2)
 
     return palette, template
@@ -73,7 +79,7 @@ def get_plot_description():
     print_widget_labels('Labels')
     xaxis = st.text_input('X axis name', r'Raman Shift cm <sup>-1</sup>')
     yaxis = st.text_input('Y axis name', r'Intensity [au]')
-    title = st.text_input('Title', r'')
+    title = st.text_input('Title', r'Raman Spectra')
     chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
     return chart_titles
 
@@ -82,7 +88,7 @@ def get_plot_description_pca():
     print_widget_labels('Labels')
     xaxis = st.text_input('X axis name', r'PC 1')
     yaxis = st.text_input('Y axis name', r'PC 2')
-    title = st.text_input('Title', r'')
+    title = st.text_input('Title', r'PCA')
     chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
     return chart_titles
 
