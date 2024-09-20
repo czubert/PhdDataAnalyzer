@@ -3,6 +3,7 @@ import peakutils
 import plotly.express as px
 import streamlit as st
 
+import constants
 # noinspection PyUnresolvedReferences
 # import str_slider
 from data_processing import utils, save_read
@@ -16,6 +17,7 @@ def visualisation():
     # # Spectrometer type `- BWTek / Renishaw / Witec / Wasatch / Teledyne
     #
     spectrometer = "BWTEK"
+
 
     # User data loader
     files = st.sidebar.file_uploader(label='Upload your data or try with ours',
@@ -72,9 +74,8 @@ def visualisation():
             # # Plot settings
             plot_settings = st.expander("Plot settings", expanded=False)
 
-            # # Choose plot colors and templates
+            # # Plot descriptions
             with plot_settings:
-                plots_color, template = vis_utils.get_chart_vis_properties_vis()
                 chart_titles = vis_utils.get_plot_description()
 
             # # Range and separation
@@ -102,7 +103,7 @@ def visualisation():
             baselined = pd.DataFrame(index=df.index)
             flattened = pd.DataFrame(index=df.index)
             for col in df.columns:
-                tmp_spectrum = df[col].dropna()  # trick for data with NaNs
+                tmp_spectrum = df[col].dropna()
                 tmp_spectrum = pd.Series(peakutils.baseline(tmp_spectrum, vals[col][0]), index=tmp_spectrum.index)
                 baselines[col] = tmp_spectrum
 
@@ -125,23 +126,36 @@ def visualisation():
                 figs = [px.line(plot_df,
                                 x=plot_df.index,
                                 y=plot_df.columns,
-                                color_discrete_sequence=plots_color,
-                                template=template
+                                color_discrete_sequence=constants.COLOR_DISCRETE_SEQUENCE,
                                 )]
 
         # Mean spectra
         elif chart_type == 'MS':
             if spectra_conversion_type == 'RAW':
                 plot_df = df
-                figs = [px.line(plot_df, x=plot_df.index, y=plot_df.columns, color_discrete_sequence=plots_color)]
+                figs = [px.line(plot_df,
+                                x=plot_df.index,
+                                y=plot_df.columns,
+                                color_discrete_sequence=constants.COLOR_DISCRETE_SEQUENCE,
+                                )]
 
             elif spectra_conversion_type == 'OPT':
                 columns = ['Average', 'Baseline', 'BL-Corrected', 'Flattened + BL-Corrected']
                 plot_df = pd.concat([df, baselines, baselined, flattened], axis=1)
                 plot_df.columns = columns
 
-                fig1 = px.line(plot_df, x=plot_df.index, y=columns[-1], color_discrete_sequence=plots_color[3:])
-                fig2 = px.line(plot_df, x=plot_df.index, y=plot_df.columns, color_discrete_sequence=plots_color)
+                fig1 = px.line(plot_df,
+                               x=plot_df.index,
+                               y=columns[-1],
+                               color_discrete_sequence=constants.COLOR_DISCRETE_SEQUENCE,
+                               )
+
+                fig2 = px.line(plot_df,
+                               x=plot_df.index,
+                               y=plot_df.columns,
+                               color_discrete_sequence=constants.COLOR_DISCRETE_SEQUENCE,
+                               )
+
                 figs = [(fig1, fig2)]
             else:
                 raise ValueError('Unknown conversion type for Mean spectrum chart')
@@ -150,7 +164,13 @@ def visualisation():
             plot_df = flattened if spectra_conversion_type in {"OPT"} else df
 
             plot_df = plot_df.reset_index().melt('Raman Shift', plot_df.columns)
-            fig = px.line_3d(plot_df, x='variable', y='Raman Shift', z='value', color='variable')
+            fig = px.line_3d(plot_df,
+                             x='variable',
+                             y='Raman Shift',
+                             z='value',
+                             color='variable',
+                             color_discrete_sequence=constants.COLOR_DISCRETE_SEQUENCE,
+                             )
 
             camera = dict(eye=dict(x=1.9, y=0.15, z=0.2))
             fig.update_layout(scene_camera=camera,
@@ -158,12 +178,11 @@ def visualisation():
                               margin=dict(l=1, r=1, t=30, b=1),
                               )
             figs = [fig]
-
         # Single spectra
         elif chart_type == 'SINGLE':
             if spectra_conversion_type == 'RAW':
                 plot_df = df
-                figs = [px.line(plot_df[col], color_discrete_sequence=plots_color) for col in plot_df.columns]
+                figs = [px.line(plot_df[col]) for col in plot_df.columns]
             else:
                 columns = ['Average', 'Baseline', 'BL-Corrected', 'Flattened + BL-Corrected']
                 figs = []
@@ -171,22 +190,30 @@ def visualisation():
                 plot_df = pd.concat([df, baselines, baselined, flattened], axis=1)
                 plot_df.columns = columns
 
-                fig1 = px.line(plot_df, x=plot_df.index, y=columns[-1],
-                               color_discrete_sequence=plots_color[3:])  # trick for color consistency
-                fig2 = px.line(plot_df, x=plot_df.index, y=plot_df.columns,
-                               color_discrete_sequence=plots_color)
+                fig1 = px.line(plot_df,
+                               x=plot_df.index,
+                               y=columns[-1],
+                               color_discrete_sequence=constants.COLOR_DISCRETE_SEQUENCE,
+                               )
+                fig2 = px.line(plot_df,
+                               x=plot_df.index,
+                               y=plot_df.columns,
+                               color_discrete_sequence=constants.COLOR_DISCRETE_SEQUENCE,
+                               )
                 fig_tup = (fig1, fig2)
                 figs.append(fig_tup)
         else:
             raise ValueError("Something unbelievable has been chosen")
 
         with col_left:
-            charts.show_charts(figs, plots_color, chart_titles, template)
+            charts.show_charts(figs, chart_titles)
 
         with col_left:
             st.markdown('')
-            link = utils.download_button(plot_df.reset_index(), f'spectrum.csv',
+            link = utils.download_button(plot_df.reset_index(),
+                                         f'spectrum.csv',
                                          button_text='Download CSV')
+
             st.markdown(link, unsafe_allow_html=True)
 
     else:

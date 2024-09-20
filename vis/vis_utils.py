@@ -10,74 +10,16 @@ import peakutils
 def trim_spectra(df):
     # trim raman shift range
     min_, max_ = int(float(df.index.min())), int(float(df.index.max())) + 1
-    min_max = st.slider('Custom range', min_value=min_, max_value=max_, value=[min_, max_])
+    min_max = st.slider('Custom range', min_value=min_, max_value=max_, value=[min_, 1800])
     min_rs, max_rs = min_max  # .split('__')
     min_rs, max_rs = float(min_rs), float(max_rs)
     mask = (min_rs <= df.index) & (df.index <= max_rs)
     return df[mask]
 
 
-def choose_template():
-    """
-    Choose default template from the list
-    :return: Str, chosen template
-    """
-    template = st.selectbox(
-        "Chart template",
-        list(pio.templates), index=4, key='new')
-    return template
-
-
-def get_chart_vis_properties_vis():
-    palettes = {
-        'qualitative': ['Alphabet', 'Antique', 'Bold', 'D3', 'Dark2', 'Dark24', 'G10', 'Light24', 'Pastel',
-                        'Pastel1', 'Pastel2', 'Plotly', 'Prism', 'Safe', 'Set1', 'Set2', 'Set3', 'T10', 'Vivid',
-                        ],
-        'diverging': ['Armyrose', 'BrBG', 'Earth', 'Fall', 'Geyser', 'PRGn', 'PiYG', 'Picnic', 'Portland', 'PuOr',
-                      'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral', 'Tealrose', 'Temps', 'Tropic', 'balance',
-                      'curl', 'delta', 'oxy',
-                      ],
-        'sequential': ['Aggrnyl', 'Agsunset', 'Blackbody', 'Bluered', 'Blues', 'Blugrn', 'Bluyl', 'Brwnyl', 'BuGn',
-                       'BuPu', 'Burg', 'Burgyl', 'Cividis', 'Darkmint', 'Electric', 'Emrld', 'GnBu', 'Greens', 'Greys',
-                       'Hot', 'Inferno', 'Jet', 'Magenta', 'Magma', 'Mint', 'OrRd', 'Oranges', 'Oryel', 'Peach',
-                       'Pinkyl', 'Plasma', 'Plotly3', 'PuBu', 'PuBuGn', 'PuRd', 'Purp', 'Purples', 'Purpor', 'Rainbow',
-                       'RdBu', 'RdPu', 'Redor', 'Reds', 'Sunset', 'Sunsetdark', 'Teal', 'Tealgrn', 'Turbo', 'Viridis',
-                       'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd', 'algae', 'amp', 'deep', 'dense', 'gray', 'haline', 'ice',
-                       'matter', 'solar', 'speed', 'tempo', 'thermal', 'turbid',
-                       ]
-    }
-
-    # Choosing colors
-    print_widget_labels('Colors')
-    palette_type = st.selectbox("Type of color palette", list(palettes.keys()) + ['custom'], 0)
-
-    if palette_type == 'custom':
-        palette = st.text_area('Hexadecimal colors', '#DB0457 #520185 #780A34 #49BD02 #B25AE8',
-                               help='Type space separated hexadecimal codes')
-        palette = palette.split()
-    else:
-        palette = st.selectbox("Color palette", palettes[palette_type], index=0)
-        palette_module = getattr(px.colors, palette_type)
-        palette = getattr(palette_module, palette)
-
-    if st.checkbox('Reversed', False):
-        palette = palette[::-1]
-
-    print_widgets_separator(2)
-
-    # Choosing Template
-    print_widget_labels('Template')
-    template = st.selectbox(
-        "Chart template",
-        list(pio.templates), index=4, key='new')
-    print_widgets_separator(2)
-
-    return palette, template
-
-
 def get_plot_description():
     print_widget_labels('Labels')
-    xaxis = st.text_input('X axis name', r'Raman Shift cm <sup>-1</sup>')
+    xaxis = st.text_input('X axis name', r'Raman Shift [cm <sup>-1</sup>]')
     yaxis = st.text_input('Y axis name', r'Intensity [au]')
     title = st.text_input('Title', r'Raman Spectra')
     chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
@@ -139,7 +81,7 @@ def subtract_baseline_and_smoothen(df, vals, cols_name=False):
         if cols_name:
             col_name = 'col'
 
-        tmp_spectrum = df[col].dropna()  # trick for data with NaNs
+        tmp_spectrum = df[col].dropna()
         tmp_spectrum = pd.Series(peakutils.baseline(tmp_spectrum, vals[col_name][0]), index=tmp_spectrum.index)
         baselines[col] = tmp_spectrum
 

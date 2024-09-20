@@ -1,7 +1,8 @@
 import plotly.graph_objects as go
+import plotly.express as px
 
 
-def fig_layout(template, fig, chart_titles=None, plots_colorscale=None):
+def fig_layout(fig, chart_titles=None):
     """
     Changing layout and styles
     :param template: Str, Plotly template
@@ -9,26 +10,28 @@ def fig_layout(template, fig, chart_titles=None, plots_colorscale=None):
     :param descr: Str
     :return: plotly.graph_objs._figure.Figure
     """
-    if chart_titles == None:
-        xaxis = (r'Raman Shift [cm <sup>-1</sup>]')
-        yaxis = (r'Intensity [au]')
-        title = (r'Raman Spectrum')
-        chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
+
+    a = ['Alphabet', 'Antique', 'Bold', 'D3', 'Dark2', 'Dark24', 'G10', 'Light24', 'Pastel',
+    'Pastel1', 'Pastel2', 'Plotly', 'Prism', 'Safe', 'Set1', 'Set2', 'Set3', 'T10', 'Vivid',
+    ]
+
+    palette_module = getattr(px.colors, 'qualitative')
+    color = getattr(palette_module, 'Plotly')
 
     # TODO tutaj zdefiniować jak mają wyglądać wszystkie ploty i wyrzucić możliwość wybierania czegokolwiek poza
     #  nazwami osi i tytułem
-    fig.update_layout(showlegend=True,
-                      template=template,
-                      colorway=plots_colorscale,
+    fig.update_layout(hovermode="x",
+                      showlegend=True,
                       paper_bgcolor='rgba(255,255,255,255)',
-                      # plot_bgcolor='rgba(255,255,255,255)',
+                      plot_bgcolor='rgba(255,255,255,255)',
                       width=900,
                       height=550,
+
                       xaxis=dict(
                           title=f"{chart_titles['x']}",
-                          linecolor="#777",  # Sets color of X-axis line
+                          linecolor="#444",  # Sets color of X-axis line
                           showgrid=False,  # Removes X-axis grid lines
-                          linewidth=2.5,
+                          linewidth=2.0,
                           showline=True,
                           showticklabels=True,
                           ticks='outside',
@@ -40,15 +43,25 @@ def fig_layout(template, fig, chart_titles=None, plots_colorscale=None):
                           showgrid=True,  # Removes Y-axis grid lines
                           linewidth=1.5,
                           gridwidth=1.8,
+                          range=[0, 65000],
                       ),
+
                       title={
                           'text': chart_titles['title'],
                           'y': 0.9,
                           'x': 0.5,
-                          'xanchor': 'center',
-                          'yanchor': 'top'},
+                      },
 
-                      legend=go.layout.Legend(x=0.5, y=0 - .4, traceorder="normal",
+                      font=dict(
+                           family="Courier New, monospace",
+                           size=18,
+                           color="black",
+
+                      ),
+
+                      legend=go.layout.Legend(x=0.5,
+                                              y=0 - .4,
+                                              traceorder="normal",
                                               font=dict(
                                                   family="sans-serif",
                                                   size=13,
@@ -61,12 +74,12 @@ def fig_layout(template, fig, chart_titles=None, plots_colorscale=None):
                                               orientation='h',
                                               xanchor='auto',
                                               itemclick='toggle',
-
                                               )),
-
     # plain hover
-    fig.update_traces(hovertemplate=None)
-    fig.update_layout(hovermode="x")
+    fig.update_traces(hovertemplate=None,
+                      line={'width': 3},
+                      )
+
     return fig
 
 

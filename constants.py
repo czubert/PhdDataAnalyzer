@@ -1,4 +1,5 @@
-# TODO should we split it into plural constants?
+import plotly.express as px
+
 LABELS = {
     # If no data or at the beggining of the program
     'EMPTY': 'Choose...',
@@ -54,5 +55,8 @@ LABELS = {
     # RMSE types
     'OneP': 'Calculate RSD of "Selected Peak" between different spectra',
     'P2P': 'Calculate RSD of "Peak to Peak ratio" between different different spectra',
-    
 }
+
+# Paleta kolorów dla widm
+COLOR_DISCRETE_SEQUENCE = px.colors.qualitative.Pastel
+
