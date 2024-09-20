@@ -19,37 +19,17 @@ def get_deg_win(chart_type, spectra_conversion_type, df_columns):
     if spectra_conversion_type == 'RAW':
         vals = None
 
-    elif chart_type == 'MS':
+    elif chart_type == 'SINGLE':
+        vals = {}
+        for col in df_columns:
+            vals[col] = (utils.choosing_regression_degree(col), utils.choosing_smoothening_window(col))
+
+    elif chart_type in {'GS', 'P3D', 'MS'}:
+        # with st.beta_expander("Customize spectra", expanded=True):
         deg = utils.choosing_regression_degree()
         window = utils.choosing_smoothening_window()
         vals = {col: (deg, window) for col in df_columns}
 
-    elif chart_type == 'SINGLE':
-        vals = {}
-        for col in df_columns:
-            # st.write(col)
-            vals[col] = (utils.choosing_regression_degree(col), utils.choosing_smoothening_window(col))
-
-    elif chart_type in {'GS', 'P3D'}:
-        # with st.beta_expander("Customize spectra", expanded=True):
-        adjust_plots_globally = st.radio(
-            "Adjust all spectra or each spectrum?",
-            ('all', 'each'), index=0)
-    
-        if adjust_plots_globally == 'all':
-            deg = utils.choosing_regression_degree()
-            window = utils.choosing_smoothening_window()
-            vals = {col: (deg, window) for col in df_columns}
-        else:
-            vals = {}
-            for col in df_columns:
-                st.markdown("""
-                <hr style="height:1px;border:none;color:#fff;background-color:#999;margin-top:10px;margin-bottom:10px" />
-                """,
-                            unsafe_allow_html=True)
-                st.write(col)
-                vals[col] = (utils.choosing_regression_degree(col),
-                             utils.choosing_smoothening_window(col))
     else:
         raise ValueError('Unknown chart type')
     

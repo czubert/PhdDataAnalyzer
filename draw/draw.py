@@ -10,9 +10,9 @@ def fig_layout(template, fig, chart_titles=None, plots_colorscale=None):
     :return: plotly.graph_objs._figure.Figure
     """
     if chart_titles == None:
-        xaxis = (r'Raman Shift cm <sup>-1</sup>')
+        xaxis = (r'Raman Shift [cm <sup>-1</sup>]')
         yaxis = (r'Intensity [au]')
-        title = (r'')
+        title = (r'Raman Spectrum')
         chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
 
     fig.update_layout(showlegend=True,

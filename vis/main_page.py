@@ -3,7 +3,6 @@ import streamlit as st
 
 
 def main_page():
-
     cols = st.columns((1, 5, 1))
     with cols[1]:
         st.title("Analiza widm, doktorat")

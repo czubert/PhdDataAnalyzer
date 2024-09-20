@@ -1,7 +1,7 @@
 import pandas as pd
 
 from constants import LABELS
-from . import utils
+from data_processing import utils
 
 
 def read_bwtek(uploaded_files, delim):

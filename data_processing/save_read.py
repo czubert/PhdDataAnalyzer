@@ -4,7 +4,7 @@ import streamlit
 import streamlit as st
 from detect_delimiter import detect
 
-from data_processing import bwtek
+from data_types import bwtek, renishaw, witec, wasatch, teledyne
 
 
 def read_files(spectrometer, files, delim):
@@ -13,12 +13,28 @@ def read_files(spectrometer, files, delim):
         streamlit.stop()
     
     # BWTek raw spectra
-    elif spectrometer == 'BWTEK':
-        df, bwtek_metadata = bwtek.read_bwtek(files, delim)
-
     else:
-        raise ValueError('Unknown spectrometer type')
-    
+        try:
+            df, bwtek_metadata = bwtek.read_bwtek(files, delim)
+        except Exception as e:
+            try:
+                df = renishaw.read_renishaw(files, delim)
+            except Exception as e:
+                try:
+                    df = witec.read_witec(files, delim)
+                except Exception as e:
+                    try:
+                        df = wasatch.read_wasatch(files, delim)
+                    except Exception as e:
+                        try:
+                            df = teledyne.read_teledyne(files, delim)
+                        except Exception as e:
+                            try:
+                                df = teledyne.read_teledyne(files, delim)
+                            except Exception as e:
+                                raise ValueError(f'{st.write("Unknown spectrometer type, more info:") + e}')
+
+
     # fix comma separated decimals (stored as strings)
     if spectrometer != "None":
         for col in df.columns:
@@ -41,7 +57,6 @@ def files_to_df(files, spectrometer):
 
         try:
             lines = [line.decode('utf-8') for line in lines]
-            st.write(lines)
         except AttributeError:
             pass
 
@@ -60,7 +75,6 @@ def files_to_df(files, spectrometer):
         return df
 
     except (TypeError, ValueError) as e:
-        st.write(e)
-        # st.error('Try choosing another type of spectra')
+        st.write(f"Try choosing another type of spectra\n Reason:\n{e}")
         st.stop()
 

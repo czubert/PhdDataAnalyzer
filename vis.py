@@ -13,12 +13,6 @@ def main():
     # TODO porównanie jak kolejne zmiany wpłynęły na ostatnią modyfikację i na końcu, jak wygląda porównanie
     #  pierwszych do końcowego produktu
 
-    # # Radiobuttons in one row
-    # st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
-
-    # # Sets sidebar's header and logo
-    # sidebar.sidebar_head()
-    #
     analysis_type = st.sidebar.radio("Analysis type", ['Strona główna', 'Wizualizacja', 'Jakość widm', 'Powtarzalność'])
 
     if analysis_type == 'Strona główna':
