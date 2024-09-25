@@ -1,7 +1,3 @@
-import base64
-
-import plotly.express as px
-import plotly.io as pio
 import streamlit as st
 import pandas as pd
 import peakutils
@@ -22,9 +18,9 @@ def get_plot_description():
     xaxis = st.text_input('X axis name', r'Raman Shift [cm <sup>-1</sup>]')
     yaxis = st.text_input('Y axis name', r'Intensity [au]')
     title = st.text_input('Title', r'Raman Spectra')
-    chart_titles = {'x': xaxis, 'y': yaxis, 'title': title}
+    file_name = st.text_input('File name', r'saved_spectra')
+    chart_titles = {'x': xaxis, 'y': yaxis, 'title': title, 'file_name': file_name}
     return chart_titles
-
 
 def get_plot_description_pca():
     print_widget_labels('Labels')

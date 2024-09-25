@@ -79,6 +79,7 @@ def visualisation():
         #
 
         # Mean Spectra
+        # TODO spectra for optimised data is not working
         if chart_type == 'MS':
             df = df.mean(axis=1).rename('Average').to_frame()
 
@@ -201,7 +202,7 @@ def visualisation():
         with col_left:
             st.markdown('')
             link = utils.download_button(plot_df.reset_index(),
-                                         f'spectrum.csv',
+                                         f'{chart_titles["file_name"]}.csv',
                                          button_text='Download CSV')
 
             st.markdown(link, unsafe_allow_html=True)

@@ -1,6 +1,6 @@
 import io
 
-import streamlit
+import streamlit as st
 from detect_delimiter import detect
 
 import exceptions
@@ -24,7 +24,7 @@ def read_files(files, delim):
             df.loc[:, col] = df[col].str.replace(',', '.').astype(float)
         except (AttributeError, ValueError):
             ...
-    
+
     return df
 
 
@@ -51,13 +51,10 @@ def files_to_df(files):
         buffer.name = file.name
         new_files.append(buffer)
 
-    return read_files(new_files, delim)
+    try:
+        df = read_files(new_files, delim)
+        return df
 
-    # try:
-    #     df = read_files(new_files, delim)
-    #     return df
-    #
-    # except (TypeError, ValueError) as e:
-    #     st.write(f"Try choosing another type of spectra\n Reason:\n{e}")
-    #     st.stop()
-
+    except (TypeError, ValueError) as e:
+        st.write(f"Try choosing another type of spectra\n Reason:\n{e}")
+        st.stop()
