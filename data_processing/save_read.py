@@ -1,11 +1,10 @@
 import io
 
 import streamlit
-import streamlit as st
 from detect_delimiter import detect
 
 import exceptions
-from data_types import bwtek, renishaw, witec, wasatch, teledyne
+from data_types import bwtek, saved_spectra
 
 
 def read_files(spectrometer, files, delim):
@@ -14,43 +13,16 @@ def read_files(spectrometer, files, delim):
         streamlit.stop()
 
     else:
-        reading_methods = [renishaw.read_renishaw, witec.read_witec, wasatch.read_wasatch, teledyne.read_teledyne]
 
         try:
             df, bwtek_metadata = bwtek.read_bwtek(files, delim)
         except ValueError:
             print("BWtek spectrometer not found")
 
-            for reading_method in reading_methods:
-                try:
-                    df = reading_method(files, delim)
-                    st.write('chuj')
-                except exceptions.WrongSpectrometerReadingError:
-                    continue
-
-
-    # BWTek raw spectra
-    # else:
-    #     try:
-    #         df, bwtek_metadata = bwtek.read_bwtek(files, delim)
-    #     except Exception as e:
-    #         try:
-    #             df = renishaw.read_renishaw(files, delim)
-    #         except Exception as e:
-    #             try:
-    #                 df = witec.read_witec(files, delim)
-    #             except Exception as e:
-    #                 try:
-    #                     df = wasatch.read_wasatch(files, delim)
-    #                 except Exception as e:
-    #                     try:
-    #                         df = teledyne.read_teledyne(files, delim)
-    #                     except Exception as e:
-    #                         try:
-    #                             df = teledyne.read_teledyne(files, delim)
-    #                         except Exception as e:
-    #                             raise ValueError(f'{st.write("Unknown spectrometer type, more info:") + e}')
-
+            try:
+                df = saved_spectra.read_saved_spectra(files, delim)
+            except exceptions.WrongSpectrometerReadingError as e:
+                print(f'Wrong format of saved data {e}')
 
     # fix comma separated decimals (stored as strings)
     if spectrometer != "None":

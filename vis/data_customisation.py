@@ -25,7 +25,6 @@ def get_deg_win(chart_type, spectra_conversion_type, df_columns):
             vals[col] = (utils.choosing_regression_degree(col), utils.choosing_smoothening_window(col))
 
     elif chart_type in {'GS', 'P3D', 'MS'}:
-        # with st.beta_expander("Customize spectra", expanded=True):
         deg = utils.choosing_regression_degree()
         window = utils.choosing_smoothening_window()
         vals = {col: (deg, window) for col in df_columns}

@@ -3,7 +3,7 @@ import streamlit as st
 from draw import draw
 
 
-def show_charts(figs, chart_titles):
+def show_charts(figs, chart_titles, normalized):
     """
     Neat function for plotting charts on the left side.
 
@@ -13,25 +13,25 @@ def show_charts(figs, chart_titles):
 
     Args:
         figs (list): list of figures to plot (might be nested)
-        plots_color: color scale for plotly
-        template: plotly template
+        :param figs: list of dataframes
+        :param normalized: bool
+        :param chart_titles: dict
 
     """
     for fig in figs:
         if isinstance(fig, (list, tuple)):
             f = fig[0]
-            draw.fig_layout(f)
-            st.plotly_chart(f, use_container_width=True, theme=None)
+            draw.fig_layout(f, chart_titles, normalized)
+            st.plotly_chart(f, use_container_width=True, theme=None, normalized=normalized)
 
             with st.expander('Detailed view'):
                 for f in fig[1:]:
-                    draw.fig_layout(f)
+                    draw.fig_layout(f, chart_titles, normalized)
                     st.plotly_chart(f,
                                     use_container_width=True,
                                     theme=None)
         else:
-            draw.fig_layout(fig,
-                            chart_titles=chart_titles)
+            draw.fig_layout(fig, chart_titles=chart_titles, normalized=normalized)
 
             st.plotly_chart(fig,
                             use_container_width=True,

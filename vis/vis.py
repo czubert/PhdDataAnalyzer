@@ -13,11 +13,11 @@ from draw import options as vis_opt, options
 
 
 def visualisation():
+    df = None
     st.write('wizualizacja')
     # # Spectrometer type `- BWTek / Renishaw / Witec / Wasatch / Teledyne
     #
     spectrometer = "BWTEK"
-
 
     # User data loader
     files = st.sidebar.file_uploader(label='Upload your data or try with ours',
@@ -47,28 +47,13 @@ def visualisation():
         # Select data conversion type
         spectra_conversion_type = vis_opt.convertion_opt()
 
-        # TODO need improvements
         # getting rid of duplicated columns
         df = df.loc[:, ~df.columns.duplicated()]
 
-        #
-        # # data manipulation - raw / optimization / normalization
-        #
-
-        # Mean Spectra
-        if chart_type == 'MS':
-            df = df.mean(axis=1).rename('Average').to_frame()
-
         # columns in main view. Chart, expanders
-        # TODO rozwiązać to jakoś sprytniej
-
         col_left, col_right = st.columns([5, 2])
 
-        if chart_type == 'SINGLE':
-            with col_left:
-                col = st.selectbox('', df.columns)
-                df = df[[col]]
-
+        # Data Optimisation and plot description
         with col_right:
             normalized = False
 
@@ -93,10 +78,25 @@ def visualisation():
                     vals = data_customisation.get_deg_win(chart_type, spectra_conversion_type, df.columns)
 
                     normalized = st.checkbox("Normalize")
+                    # TODO w utils jest funkja, która to robi, ale chyba nigdzie nie jest wykorzystywana
                     if normalized:
                         df = (df - df.min()) / (df.max() - df.min())
 
-        # data conversion end
+        #
+        # # data manipulation - raw / optimization / normalization
+        #
+
+        # Mean Spectra
+        if chart_type == 'MS':
+            df = df.mean(axis=1).rename('Average').to_frame()
+
+        # Making an expander to choose spectrum from
+        if chart_type == 'SINGLE':
+            with col_left:
+                col = st.selectbox('', df.columns)
+                df = df[[col]]
+
+        # Optimisation - polynomial baseline correction
         if spectra_conversion_type == 'OPT':
             df, baselines, baselined, flattened = vis_utils.subtract_baseline_and_smoothen(df, vals)
 
@@ -110,11 +110,6 @@ def visualisation():
 
                 baselined[col] = df[col] - baselines[col]
                 flattened[col] = baselined[col].rolling(window=vals[col][1], min_periods=1, center=True).mean()
-            #
-
-        #
-        # # Plotting
-        #
 
         # Groupped spectra
         if chart_type == 'GS':
@@ -207,7 +202,9 @@ def visualisation():
             raise ValueError("Something unbelievable has been chosen")
 
         with col_left:
-            charts.show_charts(figs, chart_titles)
+            charts.show_charts(figs,
+                               chart_titles,
+                               normalized=normalized)
 
         with col_left:
             st.markdown('')

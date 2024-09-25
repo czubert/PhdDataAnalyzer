@@ -1,25 +1,20 @@
 import plotly.graph_objects as go
 import plotly.express as px
+import streamlit
 
 
-def fig_layout(fig, chart_titles=None):
+def fig_layout(fig, chart_titles=None, normalized=False):
     """
     Changing layout and styles
-    :param template: Str, Plotly template
+    :param normalized:
+    :param chart_titles: Str
     :param fig: plotly.graph_objs._figure.Figure
-    :param descr: Str
     :return: plotly.graph_objs._figure.Figure
     """
+    y_range = [0, 63000]
+    if normalized == True:
+        y_range = [0, 1]
 
-    a = ['Alphabet', 'Antique', 'Bold', 'D3', 'Dark2', 'Dark24', 'G10', 'Light24', 'Pastel',
-    'Pastel1', 'Pastel2', 'Plotly', 'Prism', 'Safe', 'Set1', 'Set2', 'Set3', 'T10', 'Vivid',
-    ]
-
-    palette_module = getattr(px.colors, 'qualitative')
-    color = getattr(palette_module, 'Plotly')
-
-    # TODO tutaj zdefiniować jak mają wyglądać wszystkie ploty i wyrzucić możliwość wybierania czegokolwiek poza
-    #  nazwami osi i tytułem
     fig.update_layout(hovermode="x",
                       showlegend=True,
                       paper_bgcolor='rgba(255,255,255,255)',
@@ -43,7 +38,7 @@ def fig_layout(fig, chart_titles=None):
                           showgrid=True,  # Removes Y-axis grid lines
                           linewidth=1.5,
                           gridwidth=1.8,
-                          range=[0, 65000],
+                          range=y_range,
                       ),
 
                       title={
@@ -53,9 +48,9 @@ def fig_layout(fig, chart_titles=None):
                       },
 
                       font=dict(
-                           family="Courier New, monospace",
-                           size=18,
-                           color="black",
+                          family="Courier New, monospace",
+                          size=18,
+                          color="black",
 
                       ),
 
@@ -83,4 +78,29 @@ def fig_layout(fig, chart_titles=None):
     return fig
 
 
+#  TODO sprawdzić, czy to nie przez to wywala się teraz multi kolumnowy wykres
+# Adding traces, spectrum line design
+def add_traces_single_spectra(df, fig, x, y, name):
+    fig.add_traces(
+        [go.Scatter(y=df.reset_index()[y],
+                    x=df.reset_index()[x],
+                    name=name,
+                    line=dict(
+                        width=3.5,  # Width of the spectrum line
+                        color='#1c336d'  # color of the spectrum line
+                        # color='#6C9BC0'  # color of the spectrum line
+                    ),
+                    )])
+    return fig
 
+
+def add_traces(df, fig, x, y, name, col=None):
+    fig.add_traces(
+        [go.Scatter(y=df.reset_index()[y],
+                    x=df.reset_index()[x],
+                    name=name,
+                    line=dict(
+                        width=3.5,
+                    ),
+                    )])
+    return fig

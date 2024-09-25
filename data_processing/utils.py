@@ -22,6 +22,7 @@ def read_spec(uploaded_file, spectra_params, meta_params=None):
     :param meta_params: Dict
     :return: DataFrame
     """
+
     uploaded_file.seek(0)
     dammit = UnicodeDammit(uploaded_file.read(), ['utf-8', 'windows-1252', 'ascii'])
 
@@ -40,6 +41,9 @@ def read_spec(uploaded_file, spectra_params, meta_params=None):
     return data
 
 
+
+
+
 def choosing_regression_degree(col='default'):
     """
     Slider, choose your polynomial regression degree
@@ -50,8 +54,8 @@ def choosing_regression_degree(col='default'):
     label = 'Polynominal degree'
     val = st.slider(label,
                     min_value=1,
-                    max_value=20,
-                    value=5,
+                    max_value=12,
+                    value=9,
                     key=f'{col}_deg')
     return int(val)
 
@@ -66,8 +70,8 @@ def choosing_smoothening_window(col='default'):
     label = 'Smoothing window'
     val = st.slider(label,
                     min_value=1,
-                    max_value=20,
-                    value=3,
+                    max_value=7,
+                    value=2,
                     key=f'{col}_window')
     return int(val)
 
