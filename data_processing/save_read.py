@@ -4,6 +4,7 @@ import streamlit
 import streamlit as st
 from detect_delimiter import detect
 
+import exceptions
 from data_types import bwtek, renishaw, witec, wasatch, teledyne
 
 
@@ -11,28 +12,44 @@ def read_files(spectrometer, files, delim):
     if spectrometer == "EMPTY":
         streamlit.warning('Choose spectra type first')
         streamlit.stop()
-    
-    # BWTek raw spectra
+
     else:
+        reading_methods = [renishaw.read_renishaw, witec.read_witec, wasatch.read_wasatch, teledyne.read_teledyne]
+
         try:
             df, bwtek_metadata = bwtek.read_bwtek(files, delim)
-        except Exception as e:
-            try:
-                df = renishaw.read_renishaw(files, delim)
-            except Exception as e:
+        except ValueError:
+            print("BWtek spectrometer not found")
+
+            for reading_method in reading_methods:
                 try:
-                    df = witec.read_witec(files, delim)
-                except Exception as e:
-                    try:
-                        df = wasatch.read_wasatch(files, delim)
-                    except Exception as e:
-                        try:
-                            df = teledyne.read_teledyne(files, delim)
-                        except Exception as e:
-                            try:
-                                df = teledyne.read_teledyne(files, delim)
-                            except Exception as e:
-                                raise ValueError(f'{st.write("Unknown spectrometer type, more info:") + e}')
+                    df = reading_method(files, delim)
+                    st.write('chuj')
+                except exceptions.WrongSpectrometerReadingError:
+                    continue
+
+
+    # BWTek raw spectra
+    # else:
+    #     try:
+    #         df, bwtek_metadata = bwtek.read_bwtek(files, delim)
+    #     except Exception as e:
+    #         try:
+    #             df = renishaw.read_renishaw(files, delim)
+    #         except Exception as e:
+    #             try:
+    #                 df = witec.read_witec(files, delim)
+    #             except Exception as e:
+    #                 try:
+    #                     df = wasatch.read_wasatch(files, delim)
+    #                 except Exception as e:
+    #                     try:
+    #                         df = teledyne.read_teledyne(files, delim)
+    #                     except Exception as e:
+    #                         try:
+    #                             df = teledyne.read_teledyne(files, delim)
+    #                         except Exception as e:
+    #                             raise ValueError(f'{st.write("Unknown spectrometer type, more info:") + e}')
 
 
     # fix comma separated decimals (stored as strings)
@@ -49,7 +66,6 @@ def read_files(spectrometer, files, delim):
 def files_to_df(files, spectrometer):
     new_files = []
     delim = None
-
 
     for file in files:
         file.seek(0)
@@ -70,11 +86,13 @@ def files_to_df(files, spectrometer):
         buffer.name = file.name
         new_files.append(buffer)
 
-    try:
-        df = read_files(spectrometer, new_files, delim)
-        return df
+    return read_files(spectrometer, new_files, delim)
 
-    except (TypeError, ValueError) as e:
-        st.write(f"Try choosing another type of spectra\n Reason:\n{e}")
-        st.stop()
+    # try:
+    #     df = read_files(spectrometer, new_files, delim)
+    #     return df
+    #
+    # except (TypeError, ValueError) as e:
+    #     st.write(f"Try choosing another type of spectra\n Reason:\n{e}")
+    #     st.stop()
 

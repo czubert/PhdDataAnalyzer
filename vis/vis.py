@@ -37,6 +37,7 @@ def visualisation():
         # sidebar separating line
         print_widgets_separator(1, sidebar=True)
         df = save_read.files_to_df(files, spectrometer)
+
         # Select chart type
         chart_type = options.vis_options()
 

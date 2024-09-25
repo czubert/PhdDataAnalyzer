@@ -2,9 +2,11 @@ import streamlit as st
 from vis import main_page, vis
 
 st.set_page_config(
+    initial_sidebar_state="auto",
     layout="wide",
-    initial_sidebar_state="auto"
+    page_title="PhD thesis"
 )
+
 
 def main():
     """
