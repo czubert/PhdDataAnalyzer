@@ -13,11 +13,6 @@ from draw import options as vis_opt, options
 
 
 def visualisation():
-    df = None
-    st.write('wizualizacja')
-    # # Spectrometer type `- BWTek / Renishaw / Witec / Wasatch / Teledyne
-    #
-    spectrometer = "BWTEK"
 
     # User data loader
     files = st.sidebar.file_uploader(label='Upload your data or try with ours',
@@ -26,17 +21,14 @@ def visualisation():
 
     # Allow example data loading when no custom data are loaded
     if not files and st.sidebar.checkbox("Load example data"):
-        if spectrometer == "EMPTY":
-            st.sidebar.error('First Choose Spectra type')
-        else:
-            files = utils.load_example_files()
+        files = utils.load_example_files()
 
     # Check if data loaded, if yes, perform actions
     if files:
         st.spinner('Uploading data in progress')
         # sidebar separating line
         print_widgets_separator(1, sidebar=True)
-        df = save_read.files_to_df(files, spectrometer)
+        df = save_read.files_to_df(files)
 
         # Select chart type
         chart_type = options.vis_options()

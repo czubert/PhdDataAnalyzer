@@ -41,9 +41,6 @@ def read_spec(uploaded_file, spectra_params, meta_params=None):
     return data
 
 
-
-
-
 def choosing_regression_degree(col='default'):
     """
     Slider, choose your polynomial regression degree

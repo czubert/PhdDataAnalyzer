@@ -7,35 +7,28 @@ import exceptions
 from data_types import bwtek, saved_spectra
 
 
-def read_files(spectrometer, files, delim):
-    if spectrometer == "EMPTY":
-        streamlit.warning('Choose spectra type first')
-        streamlit.stop()
-
-    else:
+def read_files(files, delim):
+    try:
+        df, bwtek_metadata = bwtek.read_bwtek(files, delim)
+    except ValueError:
+        print("BWtek spectrometer not found")
 
         try:
-            df, bwtek_metadata = bwtek.read_bwtek(files, delim)
-        except ValueError:
-            print("BWtek spectrometer not found")
-
-            try:
-                df = saved_spectra.read_saved_spectra(files, delim)
-            except exceptions.WrongSpectrometerReadingError as e:
-                print(f'Wrong format of saved data {e}')
+            df = saved_spectra.read_saved_spectra(files, delim)
+        except exceptions.WrongSpectrometerReadingError as e:
+            print(f'Wrong format of saved data {e}')
 
     # fix comma separated decimals (stored as strings)
-    if spectrometer != "None":
-        for col in df.columns:
-            try:
-                df.loc[:, col] = df[col].str.replace(',', '.').astype(float)
-            except (AttributeError, ValueError):
-                ...
+    for col in df.columns:
+        try:
+            df.loc[:, col] = df[col].str.replace(',', '.').astype(float)
+        except (AttributeError, ValueError):
+            ...
     
     return df
 
 
-def files_to_df(files, spectrometer):
+def files_to_df(files):
     new_files = []
     delim = None
 
@@ -58,10 +51,10 @@ def files_to_df(files, spectrometer):
         buffer.name = file.name
         new_files.append(buffer)
 
-    return read_files(spectrometer, new_files, delim)
+    return read_files(new_files, delim)
 
     # try:
-    #     df = read_files(spectrometer, new_files, delim)
+    #     df = read_files(new_files, delim)
     #     return df
     #
     # except (TypeError, ValueError) as e:

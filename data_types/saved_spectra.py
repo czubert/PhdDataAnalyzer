@@ -3,10 +3,11 @@ import pandas as pd
 from data_processing import utils
 from constants import LABELS
 
+
 def read_saved_spectra(uploaded_files, delim):
     """
     Reads numeric data from file and creates DataFrame
-    :param uploaded_file: Streamlit uploader file
+    :param uploaded_files: Streamlit uploader file
     :return: Dict of DataFrames
     """
     reni_data = {}
