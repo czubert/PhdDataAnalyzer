@@ -7,12 +7,7 @@ LABELS = {
     # labels for spectrometers
     'UplSpec': 'Upload "*.txt" spectra',
     'BWTEK': 'BWTEK',
-    'RENI': 'Renishaw',
-    'WITEC': 'WITec Alpha300 R+',
-    'WASATCH': 'Wasatch System',
-    'TELEDYNE': 'Teledyne Princeton Instruments',
-    'JOBIN': 'Jobin Yvon T64000',
-    
+
     # labels for data visualisation type
     'SINGLE': 'Single spectra',
     'MS': "Mean spectrum",
