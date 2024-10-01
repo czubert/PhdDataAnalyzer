@@ -1,3 +1,5 @@
+beautifulsoup4~=4.12.3
+detect_delimiter
 numpy
 pandas~=2.2.2
 PeakUtils~=1.3.5
@@ -8,4 +10,3 @@ streamlit~=1.38.0
 # scikit-learn
 # sentry-sdk
 #protobuf
-beautifulsoup4~=4.12.3

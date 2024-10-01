@@ -34,32 +34,15 @@ def repeatability():
                     "4. **Prezentacja wyników**\n"
                     "   - Pokazać przykładowy odcięty baseline, żeby było widać, "
                     "na czym polega baseline correction (?)\n"
-                    "   - wykres z uśrednionymi widmami przed i po modyfikacji z podanymi parametrami, "
-                    "które oceniają jak bardzo się różnią:\n"
+                    "   - Wykres przedstawiający metodykę liczenia powtarzalności - wykres uśrednionych widm "
+                    "z wielu podłoży (1 krzywa to 1 podłoże) dla danej modyfikacji "
+                    "i opis jak liczymy o ile się od siebie różnią. Następnie porównanie końcowego wyniku dla podłoży"
+                    "przed i po danej modyfikacji.\n"
                     "       * podana miara statystyczna (RMSE lub inna)\n"
                     "       * podane czy różnice są istotne statystycznie (wynik testu statystycznego)\n"
-                    "       * dla widm PMBA - EF\n"
-                    ,
+                    "       * dla widm PMBA - EF\n",
                     unsafe_allow_html=True
                     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

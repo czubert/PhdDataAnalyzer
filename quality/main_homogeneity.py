@@ -35,11 +35,14 @@ def homogeneity():
                     "4. **Prezentacja wyników**\n"
                     "   - Pokazać przykładowy odcięty baseline, żeby było widać, "
                     "na czym polega baseline correction (?)\n"
-                    "   - wykres z uśrednionymi widmami przed i po modyfikacji z podanymi parametrami, "
-                    "które oceniają jak bardzo się różnią:\n"
+                    "   - wykres z kilkoma pomiarami z pojedynczego podłoża (po usunięciu dwóch skrajnych) "
+                    "z podaną metodą jak liczyliśmy jednorodność dla tego pojedynczego podłoża."
+                    " jako przykład co liczyliśmy. A pod spodem wyliczenia (zgodnie z opisanym wyżej sposobem)"
+                    "dla wszystkich podłoży z danej modyfikacji i przed nią. Porównanie wyniku między nimi.\n"
                     "       * podana miara statystyczna (RMSE lub inna)\n"
                     "       * podane czy różnice są istotne statystycznie (wynik testu statystycznego)\n"
-                    "       * dla widm PMBA - EF\n",
+                    "       * dla widm PMBA - EF\n"
+                    ,
                     unsafe_allow_html=True
                     )
 
