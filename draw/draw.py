@@ -20,7 +20,7 @@ def fig_layout(fig, chart_titles=None, normalized=False):
                       paper_bgcolor='rgba(255,255,255,255)',
                       plot_bgcolor='rgba(255,255,255,255)',
                       width=900,
-                      height=550,
+                      height=750,
 
                       xaxis=dict(
                           title=f"{chart_titles['x']}",
@@ -43,7 +43,7 @@ def fig_layout(fig, chart_titles=None, normalized=False):
 
                       title={
                           'text': chart_titles['title'],
-                          'y': 0.9,
+                          'y': 0.95,
                           'x': 0.5,
                       },
 
@@ -54,20 +54,21 @@ def fig_layout(fig, chart_titles=None, normalized=False):
 
                       ),
 
-                      legend=go.layout.Legend(x=0.5,
-                                              y=0 - .4,
+                      legend=go.layout.Legend(
+                                              x=1.0,
+                                              y=0.95,
                                               traceorder="normal",
                                               font=dict(
                                                   family="sans-serif",
                                                   size=13,
                                                   color="black",
-
                                               ),
                                               bgcolor="#fff",
-                                              bordercolor="#ccc",
+                                              bordercolor="#666",
                                               borderwidth=0.4,
-                                              orientation='h',
-                                              xanchor='auto',
+                                              orientation='v',
+                                              xanchor='right',
+                                              yanchor='top',
                                               itemclick='toggle',
                                               )),
     # plain hover
@@ -77,30 +78,30 @@ def fig_layout(fig, chart_titles=None, normalized=False):
 
     return fig
 
-
-#  TODO sprawdzić, czy to nie przez to wywala się teraz multi kolumnowy wykres
-# Adding traces, spectrum line design
-def add_traces_single_spectra(df, fig, x, y, name):
-    fig.add_traces(
-        [go.Scatter(y=df.reset_index()[y],
-                    x=df.reset_index()[x],
-                    name=name,
-                    line=dict(
-                        width=3.5,  # Width of the spectrum line
-                        color='#1c336d'  # color of the spectrum line
-                        # color='#6C9BC0'  # color of the spectrum line
-                    ),
-                    )])
-    return fig
-
-
-def add_traces(df, fig, x, y, name, col=None):
-    fig.add_traces(
-        [go.Scatter(y=df.reset_index()[y],
-                    x=df.reset_index()[x],
-                    name=name,
-                    line=dict(
-                        width=3.5,
-                    ),
-                    )])
-    return fig
+#
+# #  TODO sprawdzić, czy to nie przez to wywala się teraz multi kolumnowy wykres
+# # Adding traces, spectrum line design
+# def add_traces_single_spectra(df, fig, x, y, name):
+#     fig.add_traces(
+#         [go.Scatter(y=df.reset_index()[y],
+#                     x=df.reset_index()[x],
+#                     name=name,
+#                     line=dict(
+#                         width=3.5,  # Width of the spectrum line
+#                         color='#1c336d'  # color of the spectrum line
+#                         # color='#6C9BC0'  # color of the spectrum line
+#                     ),
+#                     )])
+#     return fig
+#
+#
+# def add_traces(df, fig, x, y, name, col=None):
+#     fig.add_traces(
+#         [go.Scatter(y=df.reset_index()[y],
+#                     x=df.reset_index()[x],
+#                     name=name,
+#                     line=dict(
+#                         width=3.5,
+#                     ),
+#                     )])
+#     return fig

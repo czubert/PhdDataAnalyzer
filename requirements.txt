@@ -7,6 +7,6 @@ plotly
 seaborn
 streamlit~=1.38.0
 # BeautifulSoup4
-# scikit-learn
+scikit-learn
 # sentry-sdk
 #protobuf

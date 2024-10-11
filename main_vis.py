@@ -1,6 +1,6 @@
 import streamlit as st
 
-from quality import main_repeatability, main_enhancement, main_homogeneity
+from quality import main_repeatability, main_enhancement, main_homogeneity, main_summation
 from vis import main_page, vis
 
 st.set_page_config(
@@ -17,7 +17,7 @@ def main():
     """
     analysis_type = st.sidebar.radio("Analysis type",
                                      ['Strona główna', 'Wizualizacja', 'Wzmocnienie i tło', 'Powtarzalność',
-                                      'Jednorodność'])
+                                      'Jednorodność', 'Podsumowanie'])
 
     if analysis_type == 'Strona główna':
         main_page.main_page()
@@ -29,6 +29,8 @@ def main():
         main_repeatability.repeatability()
     elif analysis_type == 'Jednorodność':
         main_homogeneity.homogeneity()
+    elif analysis_type == 'Podsumowanie':
+        main_summation.summation()
 
 
 if __name__ == '__main__':

@@ -8,7 +8,11 @@ def homogeneity():
     """
 
     st.markdown('**Powtarzalność i Jednorodność podłoży SERS**')
+    # TODO zrobić opcję inputu całych folderów. Następnie skrypt ma czytać info ze ścieżki: brak modyfikacji/modyfikacja
+    #  tło/PMBA oraz numer podłoża, dzięki temu mam 3 dodatkowe featury, po których będę liczył sobie std. dev.
 
+    # TODO odległość euklidesowa?
+    # TODO normalizacja, żeby porównywać widma o różnych intensywnościach
     with st.expander('TODO'):
         st.markdown("1. **Dane wejściowe** \n"
                     "   - Pierwsza grupa - widma PMBA\n"
